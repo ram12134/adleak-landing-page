@@ -294,8 +294,9 @@
 
       <div class="formcard">
         <div id="formView">
-          <!-- 🔧 Replace YOUR_FORM_ID with your Formspree ID -->
-          <form id="waitlistForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <!-- Netlify form handler: no Formspree ID needed -->
+          <form id="waitlistForm" name="waitlist" method="POST" data-netlify="true" action="/">
+            <input type="hidden" name="form-name" value="waitlist" />
             <div class="field">
               <label>Work email</label>
               <input type="email" name="email" placeholder="you@company.com" required />
@@ -363,11 +364,20 @@
 
   var form=document.getElementById('waitlistForm');
   form.addEventListener('submit',function(e){
-    e.preventDefault();
     var action=form.getAttribute('action');
     function ok(){document.getElementById('formView').style.display='none';document.getElementById('successView').classList.add('show');}
-    if(action.indexOf('YOUR_FORM_ID')!==-1){console.warn('Add your Formspree ID to capture real signups. Showing demo success.');ok();return;}
-    fetch(action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}})
+    if(action.indexOf('YOUR_FORM_ID')!==-1){
+      e.preventDefault();
+      console.warn('Add your Formspree ID to capture real signups. Showing demo success.');
+      ok();
+      return;
+    }
+    e.preventDefault();
+    fetch(action || '/',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams(new FormData(form)).toString()
+    })
       .then(function(r){if(r.ok){ok();}else{alert('Something went wrong — please try again.');}})
       .catch(function(){alert('Network error — please try again.');});
   });
