@@ -265,8 +265,11 @@
     </div>
     <div class="formcard">
       <div id="formView">
-        <!-- 🔧 Replace YOUR_FORM_ID -->
-        <form id="waitlistForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <!-- Web3Forms -->
+        <form id="waitlistForm" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="8ac77c9d-8e0a-48e4-88f5-b1d85a8d7ad1">
+          <input type="hidden" name="subject" value="New SpendLeak waitlist signup">
+          <input type="hidden" name="from_name" value="SpendLeak waitlist">
           <div class="field"><label>Work email</label><input type="email" name="email" placeholder="you@company.com" required /></div>
           <div class="field"><label>Company / brand</label><input type="text" name="company" placeholder="e.g. House of X" required /></div>
           <div class="field"><label>Monthly ad spend</label>
@@ -302,7 +305,7 @@
 <footer>
   <div class="wrap">
     <div class="brand"><span class="mark"><svg viewBox="0 0 100 100"><path d="M50 12 L82 26 V52 C82 72 68 86 50 92 C32 86 18 72 18 52 V26 Z" fill="#7C8BFF"/></svg></span>SpendLeak</div>
-    <div>Questions? <a class="mail" href="mailto:hello@spendleak.com">kuchiyaram03@gmail.com</a></div>
+    <div>Questions? <a class="mail" href="mailto:hello@spendleak.com">hello@spendleak.com</a></div>
     <div class="tag">detect → quantify → block</div>
   </div>
 </footer>
@@ -310,10 +313,12 @@
 </div>
 <script>
   var f=document.getElementById('waitlistForm');
-  f.addEventListener('submit',function(e){e.preventDefault();var a=f.getAttribute('action');
+  f.addEventListener('submit',function(e){e.preventDefault();
     function ok(){document.getElementById('formView').style.display='none';document.getElementById('successView').classList.add('show');}
-    if(a.indexOf('YOUR_FORM_ID')!==-1){console.warn('Add your Formspree ID to capture signups.');ok();return;}
-    fetch(a,{method:'POST',body:new FormData(f),headers:{'Accept':'application/json'}}).then(function(r){if(r.ok)ok();else alert('Something went wrong — try again.');}).catch(function(){alert('Network error — try again.');});});
+    fetch('https://api.web3forms.com/submit',{method:'POST',body:new FormData(f),headers:{'Accept':'application/json'}})
+      .then(function(r){return r.json();})
+      .then(function(data){if(data.success){ok();}else{alert('Something went wrong — please try again.');}})
+      .catch(function(){alert('Network error — please try again.');});});
 </script>
 </body>
 </html>
